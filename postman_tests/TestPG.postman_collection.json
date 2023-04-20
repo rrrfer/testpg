@@ -312,7 +312,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"priceList\" : { \"id\": \"71827463-043c-43f9-b97d-ce7c21c8854d\" },\r\n  \"version\" : \"111\",\r\n  \"activeFrom\" : \"2022-08-02\",\r\n  \"activeTo\" : \"2023-08-02\",\r\n  \"isActive\" : \"false\"\r\n}",
+							"raw": "{\r\n  \"priceListCode\" : \"other5uu55\",\r\n  \"version\" : \"111\",\r\n  \"activeFrom\" : \"2022-08-02\",\r\n  \"activeTo\" : \"2023-08-02\",\r\n  \"isActive\" : \"false\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -320,7 +320,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/service/pricelistversion/",
+							"raw": "http://localhost:8080/service/pricelistversion/code-555-555/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -329,6 +329,7 @@
 							"path": [
 								"service",
 								"pricelistversion",
+								"code-555-555",
 								""
 							]
 						}
