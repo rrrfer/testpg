@@ -1,34 +1,49 @@
 package com.model;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
-import java.util.Objects;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "PRICELIST")
 public class PriceList {
 	
-	@Id     
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "VARCHAR(255)")
 	private String priceId;
-	
 	private String code;
 	private String description;
 	private Boolean isActive;
 	
-	@OneToMany(cascade = {CascadeType.ALL}, mappedBy="priceVersionId")
-	@PrimaryKeyJoinColumn
-    private List<PriceListVersion> priceListVersions;
+	@OneToMany(mappedBy = "priceList", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<PriceListVersion> listAuthorities = new ArrayList<>();
 	
-	public PriceList(String id, String code, String description, Boolean isActive) {
+	public PriceList() {
 		super();
-		this.priceId = id;
+	}
+	
+	public PriceList(String priceId) {
+		super();
+	}
+	
+	public PriceList(String priceId, String code, String description, Boolean isActive) {
+		super();
 		this.code = code;
 		this.description = description;
 	    this.isActive = isActive;
 	}
+	
+	@Basic
+    @Column(name = "ID")
+    public String getId() {
+        return priceId;
+    }
 
-    @Basic
+	@Basic
     @Column(name = "CODE")
     public String getCode() {
         return code;
@@ -53,21 +68,5 @@ public class PriceList {
     }
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PriceList employees = (PriceList) o;
-        return Objects.equals(priceId, employees.priceId) &&
-                Objects.equals(code, employees.code) &&
-                Objects.equals(description, employees.description) &&
-                Objects.equals(isActive, employees.isActive);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(priceId, code, description, isActive);
     }
 }

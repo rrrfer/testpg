@@ -1,34 +1,52 @@
 package com.model;
 
 import javax.persistence.*;
-import java.util.Objects;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "PRICELISTVERSION")
 public class PriceListVersion {
 	
-	@Id     
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "VARCHAR(255)")
 	private String priceVersionId;
+	
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinColumn(name = "priceListId", referencedColumnName = "id", nullable = false)
+	private PriceList priceList;
 	
 	private Integer version;
 	private LocalDate activeFrom;
 	private LocalDate activeTo;
 	private Boolean isActive;
 	
-	@ManyToOne
-    @JoinColumn(name = "priceId")
-	private PriceList priceList;
+	public PriceListVersion() {
+		super();
+	}
 	
-	public PriceListVersion(String id, Integer version, LocalDate activeFrom, LocalDate activeTo, Boolean isActive) {
+	public PriceListVersion(String id, PriceList priceList, Integer version, LocalDate activeFrom, LocalDate activeTo, Boolean isActive) {
 		super();
 		this.priceVersionId = id;
+		this.priceList = priceList;
 		this.version = version;
 		this.activeFrom = activeFrom;
 		this.activeTo = activeTo;
 	    this.isActive = isActive;
 	}
+	
+	@Basic
+    @Column(name = "ID")
+    public String getId() {
+        return priceVersionId;
+    }
 
     @Basic
     @Column(name = "VERSION")
@@ -57,7 +75,6 @@ public class PriceListVersion {
         this.activeTo = activeTo;
     }
 
-
     @Basic
     @Column(name = "IS_ACTIVE")
     public Boolean getIsActive() {
@@ -66,4 +83,14 @@ public class PriceListVersion {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
+    
+    public PriceList getPriceList() {
+        return priceList;
+    }
+    public void setPriceList(PriceList priceList) {
+        this.priceList = priceList;
+    }
+    
+    
+    
 }
