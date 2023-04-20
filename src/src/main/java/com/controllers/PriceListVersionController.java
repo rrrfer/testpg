@@ -37,15 +37,15 @@ public class PriceListVersionController {
     	return new ResponseEntity<>(priceListVersionRepo.findByIsActive(isActive), HttpStatus.OK);
 	}
   
-    @PostMapping("/{priceListId}")
-	public String savePriceListVersion(@PathVariable String priceListId, @RequestBody PriceListVersion priceListVersion) {
-    	System.out.println("\n\nadd " + priceListId + "\n" 
+    @PostMapping("/{priceListCode}")
+	public String savePriceListVersion(@PathVariable String priceListCode, @RequestBody PriceListVersion priceListVersion) {
+    	System.out.println("\n\nadd " + priceListCode + "\n" 
     			+ priceListVersion.getVersion() + "\n" 
     			+ priceListVersion.getActiveFrom() + "\n" 
     			+ priceListVersion.getActiveTo() + "\n" 
     			+ priceListVersion.getIsActive() + "\n" );
     	
-		Optional<PriceList> priceList = priceListRepo.findById(priceListId);
+		Optional<PriceList> priceList = priceListRepo.findByCode(priceListCode);
 		if (priceList.isEmpty()) {
 			return "no such priceList id";
 		}

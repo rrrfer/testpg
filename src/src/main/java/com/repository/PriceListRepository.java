@@ -14,6 +14,9 @@ public interface PriceListRepository extends CrudRepository<PriceList, String> {
 	List<PriceList> findByDescription(@Param("description") String description);
 	Optional<PriceList> findById(@Param("id") String id);
 	
+	boolean existsByCode(@Param("code") String code);
+	Optional<PriceList> findByCode(@Param("code") String code);
+	
 	Long deleteByCode(@Param("code") String code);
     List<PriceList> removeByCode(@Param("code") String code);
 }

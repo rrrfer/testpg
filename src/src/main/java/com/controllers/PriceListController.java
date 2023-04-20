@@ -1,5 +1,7 @@
 package com.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.model.PriceList;
 import com.repository.PriceListRepository;
+import com.repository.PriceListVersionRepository;
 
 @RestController
 @RequestMapping("pricelist")
@@ -20,8 +23,8 @@ public class PriceListController {
 	@Autowired
     private PriceListRepository priceListRepo;
 	 
-    //@Autowired
-    //private PriceListVersionRepository priceListVersionRepo;
+    @Autowired
+    private PriceListVersionRepository priceListVersionRepo;
     
     @GetMapping("")
     ResponseEntity<?> getAllPriceLists() {
@@ -39,7 +42,33 @@ public class PriceListController {
 	}
   
     @PostMapping("")
+    /* //standard version: 
     public ResponseEntity<?> addPriceList(@RequestBody PriceList priceList){
+    	PriceList priceListObj = priceListRepo.save(priceList);
+    	return new ResponseEntity<>(priceListObj, HttpStatus.OK);
+	}
+	*/
+    // custom version:
+    public ResponseEntity<?> addPriceList(@RequestBody PriceList priceList) {
+    	Boolean isActive = false;
+    	Optional<PriceList> price = Optional.empty();
+    	
+    	if (priceListRepo.existsByCode(priceList.getCode())) {
+    		if (priceListVersionRepo.findByPriceListCodeAndIsActive(priceList.getCode(), true).isEmpty() == false) {
+    			isActive = true;
+    		}
+    		price = priceListRepo.findByCode(priceList.getCode());
+    	}
+    	else {
+    		isActive = true;
+    	}
+    	
+    	if (price.isEmpty() == false) {
+            priceList.setId(price.get().getId());
+        }
+    	
+    	priceList.setIsActive(isActive);
+    	
     	PriceList priceListObj = priceListRepo.save(priceList);
     	return new ResponseEntity<>(priceListObj, HttpStatus.OK);
 	}
@@ -56,37 +85,3 @@ public class PriceListController {
     	return new ResponseEntity<>(id, HttpStatus.OK);
 	}
 }
-    	
-/*#include <string>
-using namespace std;
-
-struct priceList;
-
-PriceList addPriceList(stding pCode, string pDescription) {
-    bool isActive = false;
-
-    PriceList priceList;
-
-    if (prices.existPrice(pCode) == true) {
-        if (priceVersions.find(pCode, isActive = true) == true) {
-            isActive = true;
-        }
-
-        priceList = prices.get(pCode);
-    }
-    else {
-        isActive = true;
-    }
-
-    if (priceList.notCreated()) {
-        priceList = new PriceList();
-    }
-
-    priceList.code = pCode;
-    priceList.description = pDescription;
-    priceList.isActive = isActive;
-
-    prices.save(priceList);
-
-    return priceList.id();
-}*/

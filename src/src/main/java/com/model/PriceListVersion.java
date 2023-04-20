@@ -5,12 +5,17 @@ import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "PRICELISTVERSION")
-public class PriceListVersion {
+public class PriceListVersion implements Serializable {
 	
 	@Id
     @GeneratedValue(generator = "uuid2")
@@ -18,9 +23,9 @@ public class PriceListVersion {
     @Column(name = "id", columnDefinition = "VARCHAR(255)")
 	private String priceVersionId;
 	
-	@JsonIgnore
+	@JsonSerialize
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "priceListId", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "priceListCode", referencedColumnName = "code", nullable = false)
 	private PriceList priceList;
 	
 	private Integer version;
